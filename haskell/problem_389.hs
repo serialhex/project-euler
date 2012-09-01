@@ -54,9 +54,17 @@ norm a  = merge lst
 --04:22 < dmwit> [([1,1],1 % 4),([1,2],1 % 4),([2,1],1 % 4),([2,2],1 % 4)]
 
 --foo (\x -> fmap' (\y -> [y,x] ) (d 2) ) (d 2)  works!!!  now: extend!
---sequence' :: [Density a] -> Density a
---sequence' []     = []
---sequence' (a:as) = foo (\x -> fmap' (\y -> [y,x] ) a ) (sequence as)
+--sequence' :: [Density d] -> Density [d]
+sequence' []     = []
+sequence' (a:b:rst) = foo (\x -> fmap' (\y -> [y,x] ) b ) a
+
+seq''' (a,(b,(c,(d,())))) = foo (\x -> fmap' (\y -> [y,x] ) b ) a
+
+seq'' :: (Density t1, (Density t1, (t, ()))) -> Density [t1]
+seq'' (a,(b,(c,()))) = foo (\x -> fmap' (\y -> [y,x] ) b ) [a,c]
+
+seq' (a,(b,())) = foo (\x -> fmap' (\y -> [y,x] ) b ) a
+
 
 --23:30 < dmwit> Any function that you would write as "foo [] = z; foo (x:xs) = bar x (foo xs)" can just be "foo 
 --               = foldr bar z" instead.
